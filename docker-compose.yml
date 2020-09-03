@@ -1,11 +1,48 @@
 version: "3"
+
 services:
   magento:
-    build: ./magento
+    depends_on:
+      - db
+      - elasticsearch
+    build: ./docker/magento/
     ports:
       - "8080:80"
     volumes:
       - ./public:/var/www
+    networks:
+      - backend
+      - frontend
 
-  mysql:
-    image: mysql
+  db:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    # command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+
+  elasticsearch:
+    image: elasticsearch:7.9.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - backend
+
+volumes:
+  db-data:
+  elasticsearch-data:
+
+networks:
+  backend:
+  frontend:
