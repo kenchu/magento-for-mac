@@ -3,13 +3,23 @@ version: "3"
 services:
   magento:
     depends_on:
-      - db
-      - elasticsearch
-    build: ./docker/magento/
+      - php
+    build: ./docker/magento
     ports:
       - "8080:80"
     volumes:
       - ./public:/var/www
+    networks:
+      - backend
+      - frontend
+
+  php:
+    depends_on:
+      - db
+      - elasticsearch
+    build: ./docker/php
+    ports:
+      - "9000:80"
     networks:
       - backend
       - frontend
