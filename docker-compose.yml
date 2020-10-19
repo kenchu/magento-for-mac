@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
   web:
@@ -27,7 +27,7 @@ services:
       - frontend
       - backend
     depends_on:
-      - composer
+      - magento
       - db
       - redis
       - elasticsearch
@@ -40,6 +40,7 @@ services:
     #   - magento-app-design:/var/magento/app/design
     #   - ./docker/magento-build/auth.json:/root/.composer/auth.json
     # command: ["composer", "create-project", "--repository=https://repo.magento.com/", "magento/project-community-edition=2.4.0", "/app"]
+    command: ["./install.sh"]
     networks:
       - backend
     depends_on:
