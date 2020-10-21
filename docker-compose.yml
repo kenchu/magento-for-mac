@@ -7,12 +7,11 @@ services:
       - "80:8080"
       - "443:443"
     environment:
+      - MAGE_ROOT="/app/magento2-2.4.0"
       - MAGENTO_RUN_MODE=developer
     volumes:
       - magento-data:/app
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      # - ./src/nginx.conf.sample:/etc/nginx/nginx.conf:ro
-      # - ./src:/usr/share/nginx/html
+      - ./nginx/etc/magento.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - frontend
       - backend
@@ -23,6 +22,8 @@ services:
     image: magento/magento-cloud-docker-php:7.4-fpm-1.2
     volumes:
       - magento-data:/app
+    environment:
+      - MAGE_ROOT="/app/magento2-2.4.0"
     networks:
       - frontend
       - backend
@@ -33,9 +34,9 @@ services:
       - elasticsearch
 
   magento:
-    build: ./docker/magento-build
-    # volumes:
-    #   - magento-src:/app
+    build: ./docker/magento
+    volumes:
+      - magento-data:/app
     #   - magento-app-code:/var/magento/app/code
     #   - magento-app-design:/var/magento/app/design
     #   - ./docker/magento-build/auth.json:/root/.composer/auth.json
